@@ -12,6 +12,7 @@ import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/store/userInfoState";
 import Tooltip from "@/components/_styled/Tooltip";
 import { Tldraw } from "@tldraw/tldraw";
+import DrawingFloatBtn from "./DrawingBtn";
 
 const LiveCode = () => {
   const { onCompile } = useCompile();
@@ -25,6 +26,13 @@ const LiveCode = () => {
     handleEditorChange,
   } = useMonacoEditor();
   const { onSnapshot } = useCodeSnapshot(monacoRef);
+
+  // Drawing Board의 Display/Hide 관련 state와 setter
+  const [displayDrawingBoard, setDisplayDrawingBoard] =
+    useState<boolean>(false);
+  const onDrawing = () => {
+    setDisplayDrawingBoard((prev: boolean) => !prev);
+  };
 
   return (
     <>
@@ -60,22 +68,25 @@ const LiveCode = () => {
           onMount={handleEditorDidMount}
           onChange={handleEditorChange}
         />
-        <div
-          style={{
-            position: "relative",
-            top: "calc(-100% + 20px)",
-            width: "100%",
-            height: "calc(100% - 50px)",
-          }}
-        >
-          <Tldraw />
-        </div>
+        {displayDrawingBoard ? (
+          <div
+            style={{
+              position: "relative",
+              top: "calc(-100% + 20px)",
+              width: "100%",
+              height: "calc(100% - 50px)",
+            }}
+          >
+            <Tldraw />
+          </div>
+        ) : null}
       </MainDiv>
       <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
         <CompileFloatBtn
           onClick={() => onCompile({ code: monacoRef.current.getValue() })}
         />
         <SnapshotFloatBtn onClick={onSnapshot} />
+        <DrawingFloatBtn onClick={onDrawing} />
       </FloatButtonDiv>
     </>
   );

@@ -69,16 +69,9 @@ const LiveCode = () => {
           onChange={handleEditorChange}
         />
         {displayDrawingBoard ? (
-          <div
-            style={{
-              position: "relative",
-              top: "calc(-100% + 20px)",
-              width: "100%",
-              height: "calc(100% - 50px)",
-            }}
-          >
+          <DrawingBoardDiv>
             <Tldraw />
-          </div>
+          </DrawingBoardDiv>
         ) : null}
       </MainDiv>
       <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
@@ -114,4 +107,10 @@ const FlexDiv = tw.div`
 w-full h-fit
 flex items-center justify-between
 pr-[10px]
+`;
+
+const DrawingBoardDiv = tw.div`
+relative
+top-[calc(-100%+20px)]
+w-full h-[calc(100%-50px)]
 `;

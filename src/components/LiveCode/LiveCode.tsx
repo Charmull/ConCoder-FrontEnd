@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
 import MonacoEditor from "@monaco-editor/react";
 import CompileFloatBtn from "@/components/LiveCode/CompileBtn";
@@ -11,8 +11,10 @@ import { EditorView } from "codemirror";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/store/userInfoState";
 import Tooltip from "@/components/_styled/Tooltip";
-import { Tldraw } from "@tldraw/tldraw";
+import { Tldraw, useFileSystem } from "@tldraw/tldraw";
 import DrawingFloatBtn from "./DrawingBtn";
+import CustomCursor from "../Drawing/CustomCursor";
+import useMultimemberState from "@/hooks/Components/useMultimemberState";
 
 const LiveCode = () => {
   const { onCompile } = useCompile();
@@ -33,6 +35,17 @@ const LiveCode = () => {
   const onDrawing = () => {
     setDisplayDrawingBoard((prev: boolean) => !prev);
   };
+
+  // Drawing 동시성 관련
+  const fileSystemEvents = useFileSystem();
+  const { ...events } = useMultimemberState(
+    `${userInfo.workspaceId}-tldraw-${new Date()
+      .toISOString()
+      .substring(0, 10)
+      .replace(/-/g, "")}`,
+    userInfo.username
+  );
+  const component = { Cursor: CustomCursor };
 
   return (
     <>
@@ -70,7 +83,14 @@ const LiveCode = () => {
         />
         {displayDrawingBoard ? (
           <DrawingBoardDiv>
-            <Tldraw />
+            <Tldraw
+              components={component}
+              autofocus
+              disableAssets={true}
+              showPages={false}
+              {...fileSystemEvents}
+              {...events}
+            />
           </DrawingBoardDiv>
         ) : null}
       </MainDiv>

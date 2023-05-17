@@ -134,18 +134,12 @@ const Workspace = () => {
               <CamList />
             </CamDiv>
 
-            {/* <ChatDiv>
+            {/* camList 길이때문에 open/close 기능 추가 */}
+            <ChatDiv
+              className={isChattingOpen ? "h-[calc(100%-320px)]" : "h-[200px]"}
+            >
               <ChatBox handleChatClick={handleChatClick} />
-            </ChatDiv> */}
-
-            {/* camList 길이때문에 open/close 추가 */}
-            {isChattingOpen ? (
-              <ChatDiv>
-                <ChatBox handleChatClick={handleChatClick} />
-              </ChatDiv>
-            ) : (
-              <ChatCloseDiv onClick={handleChatClick}>채팅 OPEN</ChatCloseDiv>
-            )}
+            </ChatDiv>
           </FlexDiv2>
         </MainDiv>
         <Modal

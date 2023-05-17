@@ -1,4 +1,5 @@
 import { CursorComponent } from "@tldraw/core";
+import tw from "tailwind-styled-components";
 
 // 다른 멤버의 커서를 커스텀
 const CustomCursor: CursorComponent<{ name: string }> = ({
@@ -6,35 +7,31 @@ const CustomCursor: CursorComponent<{ name: string }> = ({
   metadata,
 }) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        width: "fit-content",
-        alignItems: "center",
-        gap: 8,
-      }}
-    >
-      <div
-        style={{
-          width: 12,
-          height: 12,
-          background: color,
-          borderRadius: "100%",
-        }}
-      />
-      <div
-        style={{
-          background: "white",
-          padding: "4px 8px",
-          borderRadius: 4,
-          whiteSpace: "nowrap",
-          color: "#292929",
-        }}
-      >
-        {metadata!.name}
-      </div>
-    </div>
+    <CursorMainDiv>
+      <CursorPonter style={{ background: color }} />
+      <CursorName>{metadata!.name}</CursorName>
+    </CursorMainDiv>
   );
 };
 
 export default CustomCursor;
+
+const CursorMainDiv = tw.div`
+flex
+w-fit
+items-center
+gap-[8px]
+`;
+
+const CursorPonter = tw.div`
+w-[12px] h-[12px]
+rounded-full
+`;
+
+const CursorName = tw.div`
+bg-white
+py-[4px] px-[8px]
+rounded-[4px]
+whitespace-nowrap
+text-[#292929]
+`;

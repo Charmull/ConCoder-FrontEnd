@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AlgoFilterContainer from "@/components/AlgoProblem/AlgoFilter";
 import AlgoInfo from "@/components/AlgoProblem/AlgoInfo";
 import TestCaseList from "@/components/TestCase/TestCaseList";
@@ -21,6 +21,7 @@ import { userInfoState } from "@/store/userInfoState";
 import Tooltip from "@/components/_styled/Tooltip";
 import { toastMsgState } from "@/store/toastMsgState";
 import React from "react";
+import LabelTab from "@/components/_styled/LabelTab";
 
 const Workspace = () => {
   const [sendRequestProbLevel, sendRequestProbCategory] = useFetchAlgoInfo();
@@ -29,6 +30,14 @@ const Workspace = () => {
   const location = useLocation();
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const [, setToastObj] = useRecoilState(toastMsgState);
+
+  // chatting open/close
+  const [isChattingOpen, setIsChattingOpen] = useState<boolean>(false);
+  const handleChatClick = () => {
+    setIsChattingOpen((prev) => {
+      return !prev;
+    });
+  };
 
   const onClickShare = async () => {
     try {
@@ -115,12 +124,28 @@ const Workspace = () => {
           </FlexDiv>
           {/* Section 4 */}
           <FlexDiv2>
-            <CamDiv>
+            <CamDiv
+              className={
+                isChattingOpen
+                  ? "h-[300px] min-h-[300px]"
+                  : "h-[calc(100%-90px)]"
+              }
+            >
               <CamList />
             </CamDiv>
-            <ChatDiv>
-              <ChatBox />
-            </ChatDiv>
+
+            {/* <ChatDiv>
+              <ChatBox handleChatClick={handleChatClick} />
+            </ChatDiv> */}
+
+            {/* camList 길이때문에 open/close 추가 */}
+            {isChattingOpen ? (
+              <ChatDiv>
+                <ChatBox handleChatClick={handleChatClick} />
+              </ChatDiv>
+            ) : (
+              <ChatCloseDiv onClick={handleChatClick}>채팅 OPEN</ChatCloseDiv>
+            )}
           </FlexDiv2>
         </MainDiv>
         <Modal
@@ -196,10 +221,27 @@ w-full h-[300px] min-h-[300px]
 rounded-[20px]
 `;
 
+/* --@ 채팅 close 시 @-- */
+const CamOpenDiv = tw.div`
+dark-2
+w-full h-[calc(100%-90px)]
+rounded-[20px]
+`;
+
 /* 3.4.7 채팅 */
 const ChatDiv = tw.div`
 w-full h-[calc(100%-320px)]
 rounded-[20px]
+`;
+
+/* --@ 채팅 close 시 @-- */
+const ChatCloseDiv = tw.div`
+dark-1
+tab tab-active tab-lifted
+mt-[20px]
+h-[50px] w-full min-w-[187px]
+border-none
+text-base font-bold
 `;
 
 /* 3.4.4 알고리즘 문제 추천 */

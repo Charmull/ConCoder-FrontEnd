@@ -22,6 +22,7 @@ import Tooltip from "@/components/_styled/Tooltip";
 import { toastMsgState } from "@/store/toastMsgState";
 import React from "react";
 import LabelTab from "@/components/_styled/LabelTab";
+import CamSFUList from "@/components/CamSFU/CamSFUList";
 
 const Workspace = () => {
   const [sendRequestProbLevel, sendRequestProbCategory] = useFetchAlgoInfo();
@@ -131,7 +132,8 @@ const Workspace = () => {
                   : "h-[calc(100%-90px)]"
               }
             >
-              <CamList />
+              {/* <CamList /> */}
+              <CamSFUList />
             </CamDiv>
 
             {/* camList 길이때문에 open/close 기능 추가 */}

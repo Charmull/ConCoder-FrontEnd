@@ -39,10 +39,9 @@ const LiveCode = () => {
   // Drawing 동시성 관련
   const fileSystemEvents = useFileSystem();
   const { ...events } = useMultimemberState(
-    `${userInfo.workspaceId}-tldraw-${new Date()
-      .toISOString()
-      .substring(0, 10)
-      .replace(/-/g, "")}`,
+    `${new Date().toISOString().substring(0, 10).replace(/-/g, "")}-tldraw-${
+      userInfo.workspaceId
+    }`,
     userInfo.username
   );
   const component = { Cursor: CustomCursor };

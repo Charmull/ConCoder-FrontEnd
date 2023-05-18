@@ -52,7 +52,7 @@ const UserCam = (props: UserCamProps) => {
 
   return (
     <>
-      <video autoPlay={true} ref={videoRef} />
+      <video autoPlay={true} ref={videoRef} className="mb-[15px]" />
       <FlexDiv>
         <NicknameHolder>{getUsernameTag()}</NicknameHolder>
         {isLocal ? (

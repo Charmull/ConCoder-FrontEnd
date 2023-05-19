@@ -23,10 +23,12 @@ const LiveCode = () => {
     handleEditorDidMount,
     handleEditorChange,
   } = useMonacoEditor();
-  const { onSnapshot } = useCodeSnapshot(monacoRef);
 
   // 현재 코드에디터의 모든 텍스트
   const [currentText, setCurrentText] = useState("");
+
+  // const { onSnapshot } = useCodeSnapshot(monacoRef);
+  const { onSnapshot } = useCodeSnapshot(currentText);
 
   return (
     <>

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfoState } from "@/store/userInfoState";
 import { oneDark } from "@/assets/styles/one-dark";
+import useCompile from "@/hooks/Components/useCompile";
 
 type YorkieDoc = {
   content: YorkieText;
@@ -87,9 +88,16 @@ const CodeEditor = () => {
 
     // 컴파일 버튼에 붙이기@@
     const getAllText = () => {
-      const allText = view?.state.doc.toJSON();
-      console.log(allText?.join("\n"));
+      const allTextObj = view?.state.doc.toJSON();
+      const allTextStr = allTextObj?.join("\n");
+      //   console.log(allTextObj?.join("\n"));
+      //   console.log(typeof allTextObj?.join("\n"));
+      //   allTextStr && setCompileFun(() => onCompile({ code: allTextStr }));
     };
+    // const hiTag = document.getElementById("hi");
+    // if (hiTag) {
+    //   hiTag.onclick = getAllText;
+    // }
 
     const changeEventHandler = (changes: Array<TextChange>) => {
       const clientId = client.getID();
@@ -123,7 +131,12 @@ const CodeEditor = () => {
   //     editorParentElem && main();
   //   }, [editorParentElem]);
 
-  return <div id="codeEditorBox"></div>;
+  return (
+    <>
+      <button id="hi">hi</button>
+      <div id="codeEditorBox"></div>
+    </>
+  );
 };
 
 export default CodeEditor;

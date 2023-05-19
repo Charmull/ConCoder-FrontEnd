@@ -13,7 +13,10 @@ type YorkieDoc = {
   content: YorkieText;
 };
 
-const CodeEditor = () => {
+interface Props {
+  setCurrentText: Function;
+}
+const CodeEditor = ({ setCurrentText }: Props) => {
   // 렌더링 횟수 제한
   const [isRendering, setIsRendering] = useState<boolean>(false);
 
@@ -86,18 +89,18 @@ const CodeEditor = () => {
     await client.sync();
     syncText();
 
-    // 컴파일 버튼에 붙이기@@
-    const getAllText = () => {
-      const allTextObj = view?.state.doc.toJSON();
-      const allTextStr = allTextObj?.join("\n");
-      //   console.log(allTextObj?.join("\n"));
-      //   console.log(typeof allTextObj?.join("\n"));
-      //   allTextStr && setCompileFun(() => onCompile({ code: allTextStr }));
-    };
-    // const hiTag = document.getElementById("hi");
-    // if (hiTag) {
-    //   hiTag.onclick = getAllText;
-    // }
+    // // 컴파일 버튼에 붙이기@@
+    // const getAllText = () => {
+    //   const allTextObj = view?.state.doc.toJSON();
+    //   const allTextStr = allTextObj?.join("\n");
+    //   //   console.log(allTextObj?.join("\n"));
+    //   //   console.log(typeof allTextObj?.join("\n"));
+    //   //   allTextStr && setCompileFun(() => onCompile({ code: allTextStr }));
+    // };
+    // // const hiTag = document.getElementById("hi");
+    // // if (hiTag) {
+    // //   hiTag.onclick = getAllText;
+    // // }
 
     const changeEventHandler = (changes: Array<TextChange>) => {
       const clientId = client.getID();
@@ -112,6 +115,7 @@ const CodeEditor = () => {
         }));
 
       view?.dispatch({ changes: changeSpecs });
+      view && setCurrentText(view?.state.doc.toJSON().join("\n"));
     };
 
     const text = doc.getRoot().content;
@@ -133,7 +137,7 @@ const CodeEditor = () => {
 
   return (
     <>
-      <button id="hi">hi</button>
+      {/* <button id="hi">hi</button> */}
       <div id="codeEditorBox"></div>
     </>
   );

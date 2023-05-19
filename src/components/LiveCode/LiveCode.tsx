@@ -7,22 +7,23 @@ import useMonacoEditor from "@/hooks/Components/useMonacoEditor";
 import useCodeSnapshot from "@/hooks/Components/useCodeSnapshot";
 import SelectBox from "../_styled/Select";
 import useCompile from "@/hooks/Components/useCompile";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfoState } from "@/store/userInfoState";
 import Tooltip from "@/components/_styled/Tooltip";
 import CodeEditor from "./CodeEditor";
+import { liveCodeContentSetter } from "@/store/liveCode";
 
 const LiveCode = () => {
   const { onCompile } = useCompile();
   const [isEditable, setIsEditable] = useState(false);
   const userInfo = useRecoilValue(userInfoState);
-  const {
-    monaco,
-    monacoRef,
-    setliveCodeSetter,
-    handleEditorDidMount,
-    handleEditorChange,
-  } = useMonacoEditor();
+  // const {
+  //   monaco,
+  //   monacoRef,
+  //   setliveCodeSetter,
+  //   handleEditorDidMount,
+  //   handleEditorChange,
+  // } = useMonacoEditor();
 
   // 현재 코드에디터의 모든 텍스트
   const [currentText, setCurrentText] = useState("");

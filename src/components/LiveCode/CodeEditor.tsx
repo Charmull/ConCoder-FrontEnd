@@ -8,6 +8,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfoState } from "@/store/userInfoState";
 import { oneDark } from "@/assets/styles/one-dark";
 import useCompile from "@/hooks/Components/useCompile";
+import { liveCodeContentSetter } from "@/store/liveCode";
 
 type YorkieDoc = {
   content: YorkieText;
@@ -19,6 +20,8 @@ interface Props {
 const CodeEditor = ({ setCurrentText }: Props) => {
   // 렌더링 횟수 제한
   const [isRendering, setIsRendering] = useState<boolean>(false);
+
+  const [, setliveCodeSetter] = useRecoilState(liveCodeContentSetter);
 
   const userInfo = useRecoilValue(userInfoState);
 
@@ -120,6 +123,28 @@ const CodeEditor = ({ setCurrentText }: Props) => {
 
     const text = doc.getRoot().content;
     text.onChanges(changeEventHandler);
+
+    setliveCodeSetter({
+      func: async (code: string) => {
+        view?.dispatch({
+          changes: {
+            from: 0,
+            to: view.state.doc.length,
+            insert: code,
+          },
+          //   annotations: [Transaction.remote.of(true)],
+        });
+
+        let arr = [];
+        for (var i = 0; i < code.length; i++) {
+          arr.push({ val: code.charAt(i) });
+        }
+        console.log(JSON.stringify({ content: arr }));
+
+        // root로 바뀐 부분을 push해야하는데, 타입을 맞추기가 어려움...
+        // doc.getRoot().content = JSON.stringify({ content: arr });
+      },
+    });
   };
 
   useEffect(() => {

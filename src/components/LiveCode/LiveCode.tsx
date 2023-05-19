@@ -11,13 +11,19 @@ import { EditorView } from "codemirror";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/store/userInfoState";
 import Tooltip from "@/components/_styled/Tooltip";
+import CodeEditor from "./CodeEditor";
 
 const LiveCode = () => {
   const { onCompile } = useCompile();
   const [isEditable, setIsEditable] = useState(false);
   const userInfo = useRecoilValue(userInfoState);
-  const { monaco, monacoRef, setliveCodeSetter, handleEditorDidMount, handleEditorChange } =
-    useMonacoEditor();
+  const {
+    monaco,
+    monacoRef,
+    setliveCodeSetter,
+    handleEditorDidMount,
+    handleEditorChange,
+  } = useMonacoEditor();
   const { onSnapshot } = useCodeSnapshot(monacoRef);
 
   return (
@@ -44,7 +50,7 @@ const LiveCode = () => {
             />
           </Tooltip>
         </FlexDiv>
-        <MonacoEditor
+        {/* <MonacoEditor
           width="100%"
           height="calc(100% - 60px)"
           language="python"
@@ -53,10 +59,13 @@ const LiveCode = () => {
           ref={monacoRef}
           onMount={handleEditorDidMount}
           onChange={handleEditorChange}
-        />
+        /> */}
+        <CodeEditor />
       </MainDiv>
       <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
-        <CompileFloatBtn onClick={() => onCompile({ code: monacoRef.current.getValue() })} />
+        <CompileFloatBtn
+          onClick={() => onCompile({ code: monacoRef.current.getValue() })}
+        />
         <SnapshotFloatBtn onClick={onSnapshot} />
       </FloatButtonDiv>
     </>

@@ -52,7 +52,7 @@ const UserCam = (props: UserCamProps) => {
 
   return (
     <>
-      <video autoPlay={true} ref={videoRef} className="mb-[15px]" />
+      <video autoPlay={true} ref={videoRef} className="mb-[5px]" />
       <FlexDiv>
         <NicknameHolder>{getUsernameTag()}</NicknameHolder>
         {isLocal ? (
@@ -97,7 +97,7 @@ export default UserCam;
 const FlexDiv = tw.div`
 flex justify-between items-center 
 px-[5px]
-relative bottom-[30px]
+relative bottom-[35px]
 `;
 const NicknameHolder = tw.div`
 text-[10px]

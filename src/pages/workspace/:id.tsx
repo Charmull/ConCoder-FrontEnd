@@ -215,6 +215,7 @@ const CamDiv = tw.div`
 dark-2
 w-full h-[300px] min-h-[300px]
 rounded-[20px]
+overflow-y-auto
 `;
 
 /* --@ 채팅 close 시 @-- */

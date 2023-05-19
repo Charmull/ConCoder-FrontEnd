@@ -6,6 +6,7 @@ import { python } from "@codemirror/lang-python";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfoState } from "@/store/userInfoState";
+import { oneDark } from "@/assets/styles/one-dark";
 
 type YorkieDoc = {
   content: YorkieText;
@@ -60,7 +61,7 @@ const CodeEditor = () => {
     const view = editorParentElem
       ? new EditorView({
           doc: "",
-          extensions: [lineNumbers(), python(), updateListener],
+          extensions: [lineNumbers(), oneDark, python(), updateListener],
           parent: editorParentElem,
         })
       : null;

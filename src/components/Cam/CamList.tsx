@@ -136,6 +136,7 @@ const CamList = () => {
   useEffect(() => {
     let pc;
 
+    console.log(localStream !== null, stompClient.connected === true);
     if (localStream !== null && stompClient.connected === true) {
       stompClient.subscribe(
         `/sub/video/joined-room-info/${userInfo.workspaceId}`,

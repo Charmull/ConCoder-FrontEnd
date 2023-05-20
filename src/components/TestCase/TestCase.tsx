@@ -10,7 +10,11 @@ import tw from "tailwind-styled-components";
 import { IconButton } from "../_styled/Buttons";
 import Textarea from "@/components/_styled/TextArea";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { ITestCaseResult, testCaseResultState, testCaseState } from "@/store/testCaseState";
+import {
+  ITestCaseResult,
+  testCaseResultState,
+  testCaseState,
+} from "@/store/testCaseState";
 import { WebSocketContext } from "@/context/WebSocketContext";
 import { userInfoState } from "@/store/userInfoState";
 
@@ -36,7 +40,7 @@ const TestCase = ({
   const [testCases, setTestCases] = useRecoilState(testCaseState);
   const [testCaseResultList, setTestCaseResultList] =
     useRecoilState(testCaseResultState);
-    
+
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const outputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -74,10 +78,13 @@ const TestCase = ({
         `/pub/testcases/create/${userInfo.workspaceId}`,
         JSON.stringify(objToAdd)
       );
+      console.log("send!! message");
     }
+    console.log("onSaveTestCase");
   };
 
   useEffect(() => {
+    // console.log(testCases);
     compileResult = null;
   }, [isAdding]);
 

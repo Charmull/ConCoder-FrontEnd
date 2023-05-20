@@ -23,6 +23,8 @@ import { toastMsgState } from "@/store/toastMsgState";
 import React from "react";
 import LabelTab from "@/components/_styled/LabelTab";
 import CamSFUList from "@/components/CamSFU/CamSFUList";
+import { memberInfoState } from "@/store/memberInfoState";
+import axios from "axios";
 
 const Workspace = () => {
   const [sendRequestProbLevel, sendRequestProbCategory] = useFetchAlgoInfo();
@@ -67,6 +69,37 @@ const Workspace = () => {
     navigate("/home");
     localStorage.removeItem("workspace-id");
   };
+
+  // 유동적 WebRTC 구조 변경 위해
+  const [memberInfo, setMemberInfo] = useRecoilState(memberInfoState);
+  const isSessionExist = async (sessionId: string) => {
+    const response = await axios
+      .post(
+        `https://demos.openvidu.io/api/sessions/${sessionId}/connections`,
+        {},
+        { headers: { "Content-Type": "application/json" } }
+      )
+      .then(() => {
+        console.log("세션있다");
+        setMemberInfo({ memberNum: 5 });
+      })
+      .catch((err) => {
+        console.log("세션없다, 멤버수는 ", memberInfo.memberNum);
+      });
+  };
+  useEffect(() => {
+    if (userInfo) {
+      isSessionExist(userInfo.workspaceId);
+    }
+  }, [userInfo]);
+  // SFU 변경 시 모달창
+  const [isSFUModalOpen, setIsSFUModalOpen, onOpenSFUModal] = useModal();
+
+  useEffect(() => {
+    if (memberInfo.memberNum === 3) {
+      setIsSFUModalOpen(true);
+    }
+  }, [memberInfo.memberNum]);
 
   return (
     <>
@@ -132,8 +165,9 @@ const Workspace = () => {
                   : "h-[calc(100%-90px)]"
               }
             >
-              {/* <CamList /> */}
-              <CamSFUList />
+              {memberInfo.memberNum < 3 ? <CamList /> : <CamSFUList />}
+              {/* <CamList />
+              <CamSFUList /> */}
             </CamDiv>
 
             {/* camList 길이때문에 open/close 기능 추가 */}
@@ -144,6 +178,29 @@ const Workspace = () => {
             </ChatDiv>
           </FlexDiv2>
         </MainDiv>
+        {/* SFU 구조 최초 변경 시 띄울 모달창 */}
+        <Modal
+          className="h-[20%] w-[20%] min-w-[200px] max-w-[900px]"
+          isShowing={isSFUModalOpen}
+          close={() => setIsSFUModalOpen(false)}
+        >
+          <FlexDiv3>
+            <FlexDiv4>캠 연결 최적화 중입니다.</FlexDiv4>
+            <FlexDiv4 className="justify-end">
+              <ExitButton
+                style={{
+                  marginTop: "0px",
+                  marginBottom: "0px",
+                  padding: "5px 20px",
+                }}
+                onClick={() => setIsSFUModalOpen(false)}
+              >
+                확인
+              </ExitButton>
+            </FlexDiv4>
+          </FlexDiv3>
+        </Modal>
+
         <Modal
           className="h-[20%] w-[20%] min-w-[200px] max-w-[900px]"
           isShowing={isModalOpen}

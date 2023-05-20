@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { OpenVidu, Publisher, Session, StreamManager } from "openvidu-browser";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfoState } from "@/store/userInfoState";
 import axios from "axios";
 import UserCam from "./userCam";
 import { IconButton } from "../_styled/Buttons";
+import { memberInfoState } from "@/store/memberInfoState";
 
 interface userOVData {
   sessionId: string;
@@ -21,6 +22,9 @@ const CamSFUList = () => {
   });
   const [publisher, setPublisher] = useState<Publisher | null>(null);
   const [subMems, setSubMems] = useState<Array<StreamManager>>([]);
+
+  // 유동적 WebRTC 구조 변경 위해
+  const [memberInfo, setMemberInfo] = useRecoilState(memberInfoState);
 
   const joinSession = () => {
     // 1. openvidu 객체 생성
@@ -163,28 +167,57 @@ const CamSFUList = () => {
 
   return (
     <>
-      {publisher !== undefined ? (
-        <div>
-          <UserCam
-            streamManager={publisher}
-            isVideoOff={isVideoOff}
-            isMute={isMute}
-            handleVideoOff={handleVideoOff}
-            handleMute={handleMute}
-          />
-        </div>
+      {memberInfo.memberNum > 2 ? (
+        <>
+          {publisher !== undefined ? (
+            <div>
+              <UserCam
+                streamManager={publisher}
+                isVideoOff={isVideoOff}
+                isMute={isMute}
+                handleVideoOff={handleVideoOff}
+                handleMute={handleMute}
+              />
+            </div>
+          ) : null}
+          {subMems.map((sub, i) => (
+            <div key={sub.id}>
+              <UserCam
+                streamManager={sub}
+                isVideoOff={isVideoOff}
+                isMute={isMute}
+                handleVideoOff={handleVideoOff}
+                handleMute={handleMute}
+              />
+            </div>
+          ))}
+        </>
       ) : null}
-      {subMems.map((sub, i) => (
-        <div key={sub.id}>
-          <UserCam
-            streamManager={sub}
-            isVideoOff={isVideoOff}
-            isMute={isMute}
-            handleVideoOff={handleVideoOff}
-            handleMute={handleMute}
-          />
-        </div>
-      ))}
+
+      {/* <>
+        {publisher !== undefined ? (
+          <div>
+            <UserCam
+              streamManager={publisher}
+              isVideoOff={isVideoOff}
+              isMute={isMute}
+              handleVideoOff={handleVideoOff}
+              handleMute={handleMute}
+            />
+          </div>
+        ) : null}
+        {subMems.map((sub, i) => (
+          <div key={sub.id}>
+            <UserCam
+              streamManager={sub}
+              isVideoOff={isVideoOff}
+              isMute={isMute}
+              handleVideoOff={handleVideoOff}
+              handleMute={handleMute}
+            />
+          </div>
+        ))}
+      </> */}
     </>
   );
 };

@@ -27,7 +27,8 @@
     "recoil": "^0.7.5",
     "sass": "^1.55.0",
     "styled-components": "^5.3.6",
-    "webstomp-client": "^1.2.6"
+    "webstomp-client": "^1.2.6",
+    "yorkie-js-sdk": "^0.3.4"
   },
   "devDependencies": {
     "@types/react": "^17.0.33",

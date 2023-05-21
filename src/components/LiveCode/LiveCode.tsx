@@ -39,9 +39,11 @@ const LiveCode = () => {
   // Drawing 동시성 관련
   const fileSystemEvents = useFileSystem();
   const { ...events } = useMultimemberState(
-    `${new Date().toISOString().substring(0, 10).replace(/-/g, "")}-tldraw-${
-      userInfo.workspaceId
-    }`,
+    // `${new Date().toISOString().substring(0, 10).replace(/-/g, "")}-tldraw-${
+    //   userInfo.workspaceId
+    // }`,
+    // 새로운 doc 생성을 막기 위해 임시로 수동 입력 (@TODO: 배포 전 수정 필요)
+    `20230519-tldraw-e565393b-8a2d-47c1-a31a-2239131004a4`,
     userInfo.username
   );
   const component = { Cursor: CustomCursor };

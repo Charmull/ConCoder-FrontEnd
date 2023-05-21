@@ -229,7 +229,7 @@ const CamList = () => {
 
   return (
     <>
-      <button
+      {/* <button
         onClick={() => {
           // 유동적 WebRTC 구조 변경 위해 memberNum 증가
           setMemberInfo((prev) => {
@@ -238,7 +238,7 @@ const CamList = () => {
         }}
       >
         hihi
-      </button>
+      </button> */}
       {memberInfo.memberNum < 3 ? (
         <>
           <div>

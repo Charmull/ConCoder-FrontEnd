@@ -16,6 +16,7 @@ const CodeSample = ({ code, setModal }: PropType) => {
 
   const restoreSnapshot = () => {
     liveCodeSetter.func(code);
+    console.log(liveCodeSetter.func);
     setModal(false);
   };
 

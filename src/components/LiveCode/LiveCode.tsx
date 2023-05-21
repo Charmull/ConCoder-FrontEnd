@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import tw from "tailwind-styled-components";
 import MonacoEditor from "@monaco-editor/react";
 import CompileFloatBtn from "@/components/LiveCode/CompileBtn";
@@ -7,27 +7,33 @@ import useMonacoEditor from "@/hooks/Components/useMonacoEditor";
 import useCodeSnapshot from "@/hooks/Components/useCodeSnapshot";
 import SelectBox from "../_styled/Select";
 import useCompile from "@/hooks/Components/useCompile";
-import { EditorView } from "codemirror";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfoState } from "@/store/userInfoState";
 import Tooltip from "@/components/_styled/Tooltip";
 import { Tldraw, useFileSystem } from "@tldraw/tldraw";
 import DrawingFloatBtn from "./DrawingBtn";
 import CustomCursor from "../Drawing/CustomCursor";
 import useMultimemberState from "@/hooks/Components/useMultimemberState";
+import CodeEditor from "./CodeEditor";
+import { liveCodeContentSetter } from "@/store/liveCode";
 
 const LiveCode = () => {
   const { onCompile } = useCompile();
   const [isEditable, setIsEditable] = useState(false);
   const userInfo = useRecoilValue(userInfoState);
-  const {
-    monaco,
-    monacoRef,
-    setliveCodeSetter,
-    handleEditorDidMount,
-    handleEditorChange,
-  } = useMonacoEditor();
-  const { onSnapshot } = useCodeSnapshot(monacoRef);
+  // const {
+  //   monaco,
+  //   monacoRef,
+  //   setliveCodeSetter,
+  //   handleEditorDidMount,
+  //   handleEditorChange,
+  // } = useMonacoEditor();
+
+  // 현재 코드에디터의 모든 텍스트
+  const [currentText, setCurrentText] = useState("");
+
+  // const { onSnapshot } = useCodeSnapshot(monacoRef);
+  const { onSnapshot } = useCodeSnapshot(currentText);
 
   // Drawing Board의 Display/Hide 관련 state와 setter
   const [displayDrawingBoard, setDisplayDrawingBoard] =
@@ -72,7 +78,7 @@ const LiveCode = () => {
             />
           </Tooltip>
         </FlexDiv>
-        <MonacoEditor
+        {/* <MonacoEditor
           width="100%"
           height="calc(100% - 60px)"
           language="python"
@@ -81,7 +87,8 @@ const LiveCode = () => {
           ref={monacoRef}
           onMount={handleEditorDidMount}
           onChange={handleEditorChange}
-        />
+        /> */}
+        <CodeEditor setCurrentText={setCurrentText} />
         {displayDrawingBoard ? (
           <DrawingBoardDiv>
             <Tldraw
@@ -96,9 +103,10 @@ const LiveCode = () => {
         ) : null}
       </MainDiv>
       <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
-        <CompileFloatBtn
+        {/* <CompileFloatBtn
           onClick={() => onCompile({ code: monacoRef.current.getValue() })}
-        />
+        /> */}
+        <CompileFloatBtn onClick={() => onCompile({ code: currentText })} />
         <SnapshotFloatBtn onClick={onSnapshot} />
         <DrawingFloatBtn onClick={onDrawing} />
       </FloatButtonDiv>

@@ -6,7 +6,6 @@ interface PropType {
 }
 
 const CompileFloatBtn = ({ onClick }: PropType) => {
-
   return (
     <button className="accent" onClick={onClick}>
       COMPILE

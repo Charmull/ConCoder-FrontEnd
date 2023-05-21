@@ -18,7 +18,7 @@ const TestCaseList = () => {
   const userInfo = useRecoilValue(userInfoState);
 
   const showAddBtn = () => {
-    return (testCases.length == 0 && !isAdding) || !isAdding;
+    return !isAdding;
   };
 
   const sortedTestCases = [...testCases].reverse();
@@ -33,10 +33,17 @@ const TestCaseList = () => {
         `/sub/testcases/create/${userInfo.workspaceId}`,
         async (res: any) => {
           const data = await JSON.parse(res.body);
-          
+
+          // console.log("get messaage: ", data);
+          // console.log("합치기 전 테케리스트: ", testCases);
+
           const newList = [...testCases, data];
 
-          setTestCases(newList)
+          // console.log("합친 후 테케리스트: ", newList);
+
+          setTestCases((prev) => {
+            return [...prev, data];
+          });
         }
       );
 
@@ -47,19 +54,29 @@ const TestCaseList = () => {
           const newList = testCases.filter(
             (e) => e.testCaseId != data.testCaseId
           );
-          setTestCases(newList);
+          setTestCases((prev) => {
+            return prev.filter((e) => e.testCaseId != data.testCaseId);
+          });
         }
       );
     }
-  }, [stompClient.connected, testCases]);
+  }, [stompClient.connected]);
 
   useEffect(() => {
+    console.log("reRendering");
     setTestCaseResultList([]);
     console.log("watching", testCases);
   }, [testCases]);
 
   return (
     <>
+      <button
+        onClick={() => {
+          console.log(testCases);
+        }}
+      >
+        hihi
+      </button>
       <LabelTab label="테스트 케이스" />
       <MainDiv>
         {showAddBtn() && (
@@ -76,9 +93,7 @@ const TestCaseList = () => {
         )}
         {sortedTestCases.map((e, idx) => {
           const compileResult =
-            testCaseResultList?.[
-              testCaseResultList?.length - idx - 1
-            ] || null;
+            testCaseResultList?.[testCaseResultList?.length - idx - 1] || null;
           return (
             <TestCase
               key={sortedTestCases.length - idx}

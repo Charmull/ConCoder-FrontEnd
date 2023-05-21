@@ -9,6 +9,7 @@ import { userInfoState } from "@/store/userInfoState";
 import { oneDark } from "@/assets/styles/one-dark";
 import useCompile from "@/hooks/Components/useCompile";
 import { liveCodeContentSetter } from "@/store/liveCode";
+import tw from "tailwind-styled-components";
 
 type YorkieDoc = {
   content: YorkieText;
@@ -163,9 +164,24 @@ const CodeEditor = ({ setCurrentText }: Props) => {
   return (
     <>
       {/* <button id="hi">hi</button> */}
-      <div id="codeEditorBox"></div>
+      {/* <MainDiv> */}
+      <MainWrapper>
+        <div id="codeEditorBox"></div>
+      </MainWrapper>
+      {/* </MainDiv> */}
+      {/* <MainDiv id="codeEditorBox"></MainDiv> */}
+      {/* <div id="codeEditorBox"></div> */}
     </>
   );
 };
 
 export default CodeEditor;
+
+const MainDiv = tw.div`
+relative
+h-full
+`;
+
+/* overflow-y 생기도록 하기 위해 wrapper 생성 */
+const MainWrapper = tw.div`
+h-[calc(100%-100px)] overflow-y-auto`;

@@ -88,7 +88,12 @@ const LiveCode = () => {
           onMount={handleEditorDidMount}
           onChange={handleEditorChange}
         /> */}
+
+        {/* overflow-y 생기도록 하기 위해 wrapper 생성 */}
+        {/* <div className="h-[calc(100%-100px)] overflow-y-auto"> */}
         <CodeEditor setCurrentText={setCurrentText} />
+        {/* </div> */}
+
         {displayDrawingBoard ? (
           <DrawingBoardDiv>
             <Tldraw
@@ -140,6 +145,9 @@ pr-[10px]
 
 const DrawingBoardDiv = tw.div`
 relative
-top-[calc(-100%+20px)]
+top-[calc(-100%+60px)]
 w-full h-[calc(100%-50px)]
 `;
+
+// top-[calc(-100%+20px)]
+// w-full h-[calc(100%-50px)]

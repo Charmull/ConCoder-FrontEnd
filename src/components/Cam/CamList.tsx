@@ -4,6 +4,7 @@ import RemoteCam from "@/components/Cam/RemoteCam";
 import { userInfoState } from "@/store/userInfoState";
 import { useRecoilState } from "recoil";
 import { WebSocketContext } from "@/context/WebSocketContext";
+import { memberInfoState } from "@/store/memberInfoState";
 
 const CamList = () => {
   const [localStream, setLocalStream] = useState<MediaStream | undefined>(null);
@@ -16,6 +17,9 @@ const CamList = () => {
 
   // userInfo
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+
+  // 유동적 WebRTC 구조 변경 위해
+  const [memberInfo, setMemberInfo] = useRecoilState(memberInfoState);
 
   // socket message send 함수
   const sendMsg = (endpoint: string, data: object) => {
@@ -68,6 +72,12 @@ const CamList = () => {
   // 본인이 입장했을 때 (workspace에 이미 다른 멤버들 존재할 때)
   const enterHandler = (users, pc) => {
     console.log("기존 멤버 리스트: " + users);
+
+    // 유동적 WebRTC 구조 변경 위해 memberNum 증가
+    setMemberInfo((prev) => {
+      return { memberNum: prev.memberNum + users.length };
+    });
+
     for (let mem of users) {
       pc = remoteCamRef.current.makePeerConnection();
       pcRef.current[mem.id] = pc;
@@ -79,6 +89,12 @@ const CamList = () => {
   // 다른 멤버가 입장했을 때
   const memEnterHandler = async (newUserId, pc) => {
     console.log(newUserId + " 멤버가 방에 입장했습니다!");
+
+    // 유동적 WebRTC 구조 변경 위해 memberNum 증가
+    setMemberInfo((prev) => {
+      return { memberNum: prev.memberNum + 1 };
+    });
+
     pc = remoteCamRef.current.makePeerConnection();
     pcRef.current[newUserId] = pc;
     setPcsHandler(newUserId, pc);
@@ -134,8 +150,13 @@ const CamList = () => {
   };
 
   useEffect(() => {
+    console.log(memberInfo.memberNum);
+  }, [memberInfo]);
+
+  useEffect(() => {
     let pc;
 
+    console.log(localStream !== null, stompClient.connected === true);
     if (localStream !== null && stompClient.connected === true) {
       stompClient.subscribe(
         `/sub/video/joined-room-info/${userInfo.workspaceId}`,
@@ -209,7 +230,33 @@ const CamList = () => {
 
   return (
     <>
-      <div>
+      {/* <button
+        onClick={() => {
+          // 유동적 WebRTC 구조 변경 위해 memberNum 증가
+          setMemberInfo((prev) => {
+            return { memberNum: prev.memberNum - 1 };
+          });
+        }}
+      >
+        hihi
+      </button> */}
+      {memberInfo.memberNum < 3 ? (
+        <>
+          <div>
+            <LocalCam onSetLocalStream={setLocalStreamHandler} />
+          </div>
+          <div>
+            <RemoteCam
+              stompClient={stompClient}
+              sendMsg={sendMsg}
+              localStream={localStream}
+              pcs={pcs}
+              ref={remoteCamRef}
+            />
+          </div>
+        </>
+      ) : null}
+      {/* <div>
         <LocalCam onSetLocalStream={setLocalStreamHandler} />
       </div>
       <div>
@@ -220,7 +267,7 @@ const CamList = () => {
           pcs={pcs}
           ref={remoteCamRef}
         />
-      </div>
+      </div> */}
       {/* <button onClick={handler}>test !!</button> */}
     </>
   );

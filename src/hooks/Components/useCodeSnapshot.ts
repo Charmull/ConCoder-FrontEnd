@@ -1,12 +1,13 @@
-import { MutableRefObject } from 'react';
-import { Monaco } from '@monaco-editor/react';
+import { MutableRefObject } from "react";
+import { Monaco } from "@monaco-editor/react";
 import { EditorView } from "codemirror";
 import { usePost } from "@/hooks/useHttp";
 import { snapshotLengthState } from "@/store/snapshotState";
 import { toastMsgState } from "@/store/toastMsgState";
 import { useRecoilState } from "recoil";
 
-const useCodeSnapshot = (monacoRef:MutableRefObject<Monaco>) => {
+// const useCodeSnapshot = (monacoRef:MutableRefObject<Monaco>) => {
+const useCodeSnapshot = (currentText: string) => {
   const { sendRequest: sendSnapshot } = usePost({
     url: "/api/snapshots",
   });
@@ -17,7 +18,7 @@ const useCodeSnapshot = (monacoRef:MutableRefObject<Monaco>) => {
     useRecoilState(snapshotLengthState);
 
   const onSnapshot = () => {
-    const curContent = monacoRef.current?.getValue();
+    const curContent = currentText;
     setToastObj({ msg: "스냅샷 저장 완료", show: true });
     setSnapshotLength(snapshotLength + 1);
     sendSnapshot({ content: curContent });

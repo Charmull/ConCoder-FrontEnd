@@ -70,13 +70,13 @@ const TestCaseList = () => {
 
   return (
     <>
-      <button
+      {/* <button
         onClick={() => {
           console.log(testCases);
         }}
       >
         hihi
-      </button>
+      </button> */}
       <LabelTab label="테스트 케이스" />
       <MainDiv>
         {showAddBtn() && (

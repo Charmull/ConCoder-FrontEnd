@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AlgoFilterContainer from "@/components/AlgoProblem/AlgoFilter";
 import AlgoInfo from "@/components/AlgoProblem/AlgoInfo";
 import TestCaseList from "@/components/TestCase/TestCaseList";
@@ -25,6 +25,7 @@ import LabelTab from "@/components/_styled/LabelTab";
 import CamSFUList from "@/components/CamSFU/CamSFUList";
 import { memberInfoState } from "@/store/memberInfoState";
 import axios from "axios";
+import { WebSocketContext as stomp } from "@/context/WebSocketContext";
 
 const Workspace = () => {
   const [sendRequestProbLevel, sendRequestProbCategory] = useFetchAlgoInfo();
@@ -100,6 +101,16 @@ const Workspace = () => {
       setIsSFUModalOpen(true);
     }
   }, [memberInfo.memberNum]);
+
+  // stomp (socket 연결 로딩 모달 띄우기 위해)
+  const stompClient = useContext(stomp);
+  const [isSocketLoading, setIsSocketLoading] = useState<boolean>(true);
+  useEffect(() => {
+    if (stompClient.connected) {
+      setIsSocketLoading(false);
+    }
+    console.log("socket 연결: ", stompClient.connected);
+  }, [stompClient.connected]);
 
   return (
     <>
@@ -197,6 +208,29 @@ const Workspace = () => {
               >
                 확인
               </ExitButton>
+            </FlexDiv4>
+          </FlexDiv3>
+        </Modal>
+
+        {/* socket 연결 로딩 중 모달창 */}
+        <Modal
+          className="h-[20%] w-[20%] min-w-[200px] max-w-[900px]"
+          isShowing={isSocketLoading}
+          // close={() => setIsSocketLoading(false)}
+        >
+          <FlexDiv3>
+            <FlexDiv4>워크스페이스 연결 중입니다.</FlexDiv4>
+            <FlexDiv4 className="justify-end">
+              {/* <ExitButton
+                style={{
+                  marginTop: "0px",
+                  marginBottom: "0px",
+                  padding: "5px 20px",
+                }}
+                onClick={() => setIsSFUModalOpen(false)}
+              >
+                확인
+              </ExitButton> */}
             </FlexDiv4>
           </FlexDiv3>
         </Modal>

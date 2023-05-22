@@ -10,7 +10,7 @@ interface PropType {
   className: string;
   children: ReactNode;
   isShowing: boolean;
-  close: Dispatch<SetStateAction<boolean>>;
+  close?: Dispatch<SetStateAction<boolean>>;
 }
 
 const Modal = ({ children, isShowing, close, className }: PropType) => {
@@ -19,9 +19,11 @@ const Modal = ({ children, isShowing, close, className }: PropType) => {
         <>
           <ModalWrapper onClick={close}></ModalWrapper>
           <ModalContainer className={className}>
-            <CloseButton>
-              <IconButton name="close" onClick={close} />
-            </CloseButton>
+            {close && (
+              <CloseButton>
+                <IconButton name="close" onClick={close} />
+              </CloseButton>
+            )}
             {children}
           </ModalContainer>
         </>,

@@ -32,7 +32,7 @@ const CodeSample = ({ code, setModal }: PropType) => {
             read-only={true}
             value={code}
           />
-          <FooterDiv>
+          {/* <FooterDiv>
             <button
               className="accent"
               style={{ width: "100px" }}
@@ -40,7 +40,7 @@ const CodeSample = ({ code, setModal }: PropType) => {
             >
               복구
             </button>
-          </FooterDiv>
+          </FooterDiv> */}
         </>
       ) : (
         <PlaceholderDiv>

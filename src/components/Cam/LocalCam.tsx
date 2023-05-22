@@ -81,14 +81,18 @@ const LocalCam = ({ onSetLocalStream }: PropType) => {
             <span>
               <span />
               <IconButton
-                name="volume-slash"
+                name="volume-xmark"
                 size="xs"
                 onClick={muteClickHandler}
               />
             </span>
           ) : (
             <span>
-              <IconButton name="volume" size="xs" onClick={muteClickHandler} />
+              <IconButton
+                name="volume-high"
+                size="xs"
+                onClick={muteClickHandler}
+              />
             </span>
           )}
         </ButtonsDiv>

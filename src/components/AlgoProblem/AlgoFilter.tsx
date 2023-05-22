@@ -21,8 +21,10 @@ const AlgoFilterContainer = () => {
 
     const url =
       tabNum == 0
-        ? `/api/problems/random?standard=level&id=${levelFilter}`
-        : `/api/problems?number=${problemNum}`;
+        ? `/api/problems?number=${problemNum}`
+        : `/api/problems/random?standard=level&id=${levelFilter}`;
+    // ? `/api/problems/random?standard=level&id=${levelFilter}`
+    // : `/api/problems?number=${problemNum}`;
     console.log(url);
 
     axios
@@ -34,7 +36,7 @@ const AlgoFilterContainer = () => {
           setAlgoProblemList({ list: [], length: 0, error: true });
           return;
         }
-        tabNum == 0
+        tabNum == 1
           ? setAlgoProblemList({
               list: data,
               length: data.length,
@@ -52,7 +54,7 @@ const AlgoFilterContainer = () => {
 
   return (
     <>
-      <Tabs
+      {/* <Tabs
         list={["필터검색", "번호검색"]}
         tabNum={tabNum}
         setTabNum={setTabNum}
@@ -80,6 +82,17 @@ const AlgoFilterContainer = () => {
             setInput={setProblemNum}
           />
         )}
+        <SearchBtn onClick={onSearch}> 검색 </SearchBtn>
+      </ContentDiv> */}
+      <Tabs list={["번호검색"]} tabNum={tabNum} setTabNum={setTabNum} />
+      <ContentDiv>
+        {tabNum == 0 ? (
+          <InputBox
+            placeholder="문제 번호를 검색하세요"
+            label="문제 번호"
+            setInput={setProblemNum}
+          />
+        ) : null}
         <SearchBtn onClick={onSearch}> 검색 </SearchBtn>
       </ContentDiv>
     </>

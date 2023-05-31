@@ -1,4 +1,4 @@
-import { ITestCase } from "./../../store/testCaseState";
+import { ITestCase, ITestCaseResult } from "./../../store/testCaseState";
 import { useContext, useEffect } from "react";
 import { usePost } from "@/hooks/useHttp";
 import { testCaseResultState, testCaseState } from "@/store/testCaseState";
@@ -14,24 +14,33 @@ interface PropType {
 const useCompile = () => {
   const [, setToastObj] = useRecoilState(toastMsgState);
   const testCaseList = useRecoilValue(testCaseState);
-  const [, setTestCaseResultList] = useRecoilState(testCaseResultState);
+  const [testCaseResultLi, setTestCaseResultList] =
+    useRecoilState(testCaseResultState);
   const handleCompileResult = (res: any, testCaseList: ITestCase[]) => {
     const data = res;
-    console.log(data);
+    console.log("data: ", data);
 
     console.log("testCaseList", testCaseList);
     const newList = testCaseList.map((e: ITestCase) => ({
       output: e.output,
       testCaseId: e.testCaseId,
     }));
+
     const testCaseResultList = newList.map((e: any) => {
       if (e.testCaseId == data.testCaseId) {
-        console.log("data", e, data);
-          return data.output === e.output
-            ? { ...e, time: data.time, success: true }
-            : { ...e, time: data.time, success: false };
+        console.log("data.id === e.id: ", e, data);
+        return data.output === e.output
+          ? { ...e, time: data.time, success: true }
+          : { ...e, time: data.time, success: false };
+      } else {
+        console.log(testCaseResultLi);
+        // testCaseResultLi가 handleCompileResult 실행될때마다 바뀌어야 함. 따라서 아래 useEffect의 의존성배열에 임시로 testCaseResultLi 추가함.
+        // 그러나 너무 많은 리렌더링이 일어나므로 추후 로직 변경해줄 것 (TODO)
+        let tempEl = testCaseResultLi.find((elm: ITestCaseResult) => {
+          return elm.testCaseId === e.testCaseId;
+        });
+        return tempEl ? tempEl : e;
       }
-      else return e
     });
 
     console.log(newList, testCaseResultList);
@@ -69,15 +78,26 @@ const useCompile = () => {
   };
 
   useEffect(() => {
-    if (stompClient.connected)
+    console.log("out");
+    if (stompClient.connected) {
+      console.log("in");
       stompClient.subscribe(
         `/sub/compile/${userInfo.workspaceId}`,
         async (res: any) => {
           const data = await JSON.parse(res.body);
+          console.log("in useEffect, data: ", data);
           handleCompileResult(data, testCaseList);
-        }
+        },
+        { id: "compile" }
       );
-  }, [stompClient.connected, testCaseList]);
+    }
+
+    return () => {
+      console.log("비워주기");
+      stompClient.unsubscribe("compile");
+    };
+    // testCaseResultLi
+  }, [stompClient.connected, testCaseList, testCaseResultLi]);
 
   return { isLoading, error, onCompile };
 };

@@ -10,7 +10,11 @@ import tw from "tailwind-styled-components";
 import { IconButton } from "../_styled/Buttons";
 import Textarea from "@/components/_styled/TextArea";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { ITestCaseResult, testCaseResultState, testCaseState } from "@/store/testCaseState";
+import {
+  ITestCaseResult,
+  testCaseResultState,
+  testCaseState,
+} from "@/store/testCaseState";
 import { WebSocketContext } from "@/context/WebSocketContext";
 import { userInfoState } from "@/store/userInfoState";
 
@@ -36,7 +40,7 @@ const TestCase = ({
   const [testCases, setTestCases] = useRecoilState(testCaseState);
   const [testCaseResultList, setTestCaseResultList] =
     useRecoilState(testCaseResultState);
-    
+
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const outputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -54,7 +58,9 @@ const TestCase = ({
       );
     }
 
-    setTestCases(newList);
+    // TestCaseList.tsx에서 delete 메시지 받을때도 setTestCases()를 하기 때문에, 중복해서 set하면 추후 컴파일 시 컴파일 횟수가 늘어남(useCompile)
+    // (횟수 느는것은 현상으로 확인 가능. 그런데 useCompile.tsx의 useEffect return으로 unsubscribe하는데 늘어나는 이유는 파악 불가)
+    // setTestCases(newList);
     setIsAdding(false);
   };
 
@@ -74,10 +80,13 @@ const TestCase = ({
         `/pub/testcases/create/${userInfo.workspaceId}`,
         JSON.stringify(objToAdd)
       );
+      console.log("send!! message");
     }
+    console.log("onSaveTestCase");
   };
 
   useEffect(() => {
+    // console.log(testCases);
     compileResult = null;
   }, [isAdding]);
 

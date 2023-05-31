@@ -14,7 +14,7 @@ interface ChatPropType {
   mine: boolean;
 }
 
-const ChatBox = () => {
+const ChatBox = ({ handleChatClick }: { handleChatClick: Function }) => {
   const [chatContent, setChatContent] = useState<string>("");
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const stompClient = useContext(WebSocketContext);
@@ -52,7 +52,9 @@ const ChatBox = () => {
 
   return (
     <>
-      <LabelTab label="채팅" />
+      <div onClick={handleChatClick}>
+        <LabelTab label="채팅" />
+      </div>
       <MainDiv>
         <ChatList ref={scrollRef}>
           {chatList.map((chat: ChatPropType) => {
